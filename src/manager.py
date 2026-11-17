@@ -22,6 +22,9 @@ class Manager:
         if apartment_key not in self.apartments:
             return None
 
+        if month is not None and not (1 <= month <= 12):
+            return None
+
         total = 0.0
         for bill in self.bills:
             if (
