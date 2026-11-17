@@ -18,6 +18,21 @@ class Manager:
         self.transfers = Transfer.from_json_file(self.parameters.transfers_json_path)
         self.bills = Bill.from_json_file(self.parameters.bills_json_path)
 
+    def get_apartment_costs(self, apartment_key: str, year: int | None = None, month: int | None = None) -> float | None:
+        if apartment_key not in self.apartments:
+            return None
+
+        total = 0.0
+        for bill in self.bills:
+            if (
+                bill.apartment == apartment_key
+                and (year is None or bill.settlement_year == year)
+                and (month is None or bill.settlement_month == month)
+            ):
+                total += bill.amount_pln
+
+        return total
+
     def check_tenants_apartment_keys(self) -> bool:
         for tenant in self.tenants.values():
             if tenant.apartment not in self.apartments:
